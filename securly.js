@@ -1,80 +1,34 @@
 document.addEventListener("keydown", function (e) {
-    if (e.key == "~" && e.ctrlKey && e.shiftKey) {
-        // Create an overlay container
-        var overlay = document.createElement("div");
-        overlay.style.cssText = `
-            position: fixed;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 400px;
-            height: 300px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            border-radius: 10px;
-            padding: 20px;
-            z-index: 10000;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        `;
+    if (e.key === "~" && e.ctrlKey) {
+        console.log("Shortcut key pressed");
 
-        // Create a close button
-        var closeButton = document.createElement("button");
-        closeButton.textContent = "Close";
-        closeButton.style.cssText = `
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: red;
-            border: none;
-            color: white;
-            padding: 5px 10px;
-            cursor: pointer;
-        `;
-        closeButton.addEventListener("click", function () {
-            document.body.removeChild(overlay);
-        });
+        // Create a new popup window
+        var t = window.open("", "_blank", "width=500,height=300");
+        if (!t) {
+            console.error("Popup blocked or failed to open.");
+            return;
+        }
 
-        // Create a text area for code input
-        var codeInput = document.createElement("textarea");
-        codeInput.style.cssText = `
-            width: 100%;
-            height: 70%;
-            background-color: #333;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-        `;
-        codeInput.placeholder = "Enter JavaScript code here...";
+        // Create an iframe element
+        var iframe = t.document.createElement("iframe");
+        iframe.src = "https://inglan2.github.io/uRun/popup.html";
+        iframe.style.cssText = "width:100%; height:100%; border:none;";
+        t.document.body.appendChild(iframe);
+        t.document.title = "uRun";
 
-        // Create an execute button
-        var executeButton = document.createElement("button");
-        executeButton.textContent = "Execute";
-        executeButton.style.cssText = `
-            margin-top: 10px;
-            background: green;
-            border: none;
-            color: white;
-            padding: 10px;
-            width: 100%;
-            cursor: pointer;
-            border-radius: 5px;
-        `;
-        executeButton.addEventListener("click", function () {
-            try {
-                eval(codeInput.value);
-            } catch (error) {
-                alert("Error: " + error.message);
+        // Listen for messages from the iframe
+        t.addEventListener("message", function (e) {
+            console.log("Message received:", e.data);
+            if (typeof e.data === "string" && e.data.startsWith("execute:")) {
+                try {
+                    eval(e.data.replace("execute:", ""));
+                    console.log("Code executed successfully");
+                } catch (err) {
+                    console.error("Error executing code:", err);
+                } finally {
+                    t.close();
+                }
             }
         });
-
-        // Append elements to the overlay
-        overlay.appendChild(closeButton);
-        overlay.appendChild(codeInput);
-        overlay.appendChild(executeButton);
-
-        // Append overlay to the body
-        document.body.appendChild(overlay);
     }
 });
