@@ -1,7 +1,6 @@
-/// execute_script.js
-window.addEventListener("keyup", event => {
-  if (event.ctrlKey && event.which === 192) {
-      var newURL = "javascript:(function(){    var newURL = prompt("Enter the URL to go to:");    if(newURL) {        window.location.href = newURL;    }})();"; // Predefined URL
-      window.location.href = newURL;
-  }
+// execute_script.js
+document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && event.shiftKey && event.key === '`') { // ` is the key code for ~
+        window.open('https://example.com', '_blank'); // Replace with your URL
+    }
 });
