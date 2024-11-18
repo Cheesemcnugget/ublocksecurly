@@ -1,14 +1,15 @@
 /// execute_script.js
 window.addEventListener("keyup", event => {
   if (event.ctrlKey && event.which === 192) {
-  let iframe = document.createElement('iframe');
-iframe.src = 'https://www.bing.com';
-iframe.style.position = 'fixed';
-iframe.style.bottom = '0';
-iframe.style.right = '0';
-iframe.style.width = '300px';
-iframe.style.height = '200px';
-iframe.style.border = 'none';
-document.body.appendChild(iframe);
+let div = document.createElement('div');
+div.innerText = 'hi';
+div.style.position = 'fixed';
+div.style.bottom = '0';
+div.style.right = '0';
+div.style.backgroundColor = 'white';
+div.style.padding = '10px';
+div.style.border = '1px solid black';
+document.body.appendChild(div);
+
   }
 });
